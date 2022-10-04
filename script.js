@@ -4,17 +4,18 @@ function saveToLocal(event) {
 	const email = event.target.email.value;
 
 	const obj = {
+		_id,
 		name,
 		email,
 	};
 
 	// Fucniton check user comes here
-	if (obj.email in localStorage) {
-		console.log("Already present");
+	// if (obj.email in localStorage) {
+	// 	console.log("Already present");
 
-		// Decalaring function to remove the user from UI
-		removeUser(obj.email);
-	}
+	// 	// Decalaring function to remove the user from UI
+	// 	removeUser(obj.email);
+	// }
 
 	axios
 		.post(
@@ -45,7 +46,7 @@ function getUserList(user) {
 
 	// creating li to display on the UI
 	const li = document.createElement("li");
-	li.id = `${user.email}`;
+	li.id = `${user._id}`;
 	li.appendChild(document.createTextNode(`${user.name}, ${user.email}`));
 	userList.appendChild(li);
 
@@ -55,7 +56,7 @@ function getUserList(user) {
 	editbtn.appendChild(document.createTextNode("edit"));
 	editbtn.onclick = function () {
 		console.log("edit clicked");
-		editUser(user.email, user.name);
+		editUser(user._id, user.name);
 	};
 	li.appendChild(editbtn);
 	// userList.appendChild(li);
@@ -65,7 +66,7 @@ function getUserList(user) {
 	delBtn.id = "delete";
 	delBtn.appendChild(document.createTextNode("delete"));
 	delBtn.onclick = function () {
-		deleteUser(user.email);
+		deleteUser(user._id);
 	};
 	// delBtn.setAttribute("onclick", deleteUser(`${user.email}`));
 	li.appendChild(delBtn);
@@ -90,15 +91,24 @@ function editUser(email, name) {
 	deleteUser(email);
 }
 
-function deleteUser(emailId) {
+function deleteUser(userID) {
 	console.log("delete invoked");
-	localStorage.removeItem(emailId);
-	removeUser(emailId);
+	axios
+		.delete(
+			`https://crudcrud.com/api/89cd0a5573b34268bf72bf694fe4e7d4/userDetails/${userID}`
+		)
+		.then((response) => {
+			removeUser(userID);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+	// localStorage.removeItem(emailId);
 }
 
-function removeUser(email) {
+function removeUser(userID) {
 	let ul = document.getElementById("userList");
-	let li = document.getElementById(email);
+	let li = document.getElementById(userID);
 	ul.removeChild(li);
 	// let arrLi = Array.from(li);
 	// arrLi.forEach(function(li.ch)){
