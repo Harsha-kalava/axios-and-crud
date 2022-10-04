@@ -113,10 +113,8 @@ window.addEventListener("DOMContentLoaded", () => {
 			"https://crudcrud.com/api/89cd0a5573b34268bf72bf694fe4e7d4/userDetails"
 		)
 		.then((response) => {
-			for (let i = 0; i < response.length; i++) {
-				const key = response[i];
-				const userDetailsObj = JSON.parse(key.data);
-				getUserList(userDetailsObj);
+			for (let i = 0; i < response.data.length; i++) {
+				getUserList(response.data[i]);
 			}
 		})
 		.catch((err) => {
